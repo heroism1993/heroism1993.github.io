@@ -79,7 +79,22 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        
+        <h1 id="ARM64中断控制器简介"><a href="#ARM64中断控制器简介" class="headerlink" title="ARM64中断控制器简介"></a>ARM64中断控制器简介</h1><p>GICv3是针对ARM64体系架构设计的中断控制器，负责ARM64平台之上的所有中断的配置和转发，包括但不限于时钟中断、SGI中断、普通设备中断、PCI-MSI中断。</p>
+<h2 id="中断的种类"><a href="#中断的种类" class="headerlink" title="中断的种类"></a>中断的种类</h2><p>GICv3支持如下几种中断。</p>
+<h3 id="1-SGI（软件触发中断）"><a href="#1-SGI（软件触发中断）" class="headerlink" title="1. SGI（软件触发中断）"></a>1. SGI（软件触发中断）</h3><p>软件触发中断是一种percpu的中断,硬件中断号为<strong>0-15</strong>，通过软件写GIC的对应CPU的SGI寄存器触发，一般用作CPU核间通知。在Linux的中断子系统中，一般被称作IPI中断(inter-processor interrupts)，并没有全部用完。</p>
+<pre><code class="c">enum ipi_msg_type &#123;
+    IPI_RESCHEDULE,
+    IPI_CALL_FUNC,
+    IPI_CPU_STOP,
+    IPI_CPU_CRASH_STOP,
+    IPI_TIMER,
+    IPI_IRQ_WORK,
+    IPI_WAKEUP,
+    NR_IPI
+&#125;;
+</code></pre>
+<h3 id="2-PPI（私有设备中断）"><a href="#2-PPI（私有设备中断）" class="headerlink" title="2. PPI（私有设备中断）"></a>2. PPI（私有设备中断）</h3><p>对于一般的中断，是可以配置中断绑定的CPU的，当中断触发后，中断信号会由中断控制器route到配置的CPU，之后该CPU会被唤起处理中断。私有设备中断，则不能配置target CPU，只能被route到单一的CPU。比较常见的PPI中断，是各种时钟中断，每个CPU core都有对应的时钟生成给每个core的时钟中断。</p>
+<h3 id="3-SPI（共享设备中断）"><a href="#3-SPI（共享设备中断）" class="headerlink" title="3. SPI（共享设备中断）"></a>3. SPI（共享设备中断）</h3>
       
     </div>
     <footer class="article-footer">
